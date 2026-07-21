@@ -1,0 +1,13 @@
+- [x] `core/cover_cache.py` 提供 `download_cover()` 下载封面到 `runtime/temp/covers/`
+- [x] `core/cover_cache.py` 提供 `get_cover_path()` 获取已缓存封面
+- [x] `core/cover_cache.py` 提供 `clear_expired_covers()` 清理 7 天以上过期封面
+- [x] `gui/widgets/cover_widget.py` 提供 `CoverWidget` 封面显示控件
+- [x] `CoverWidget` 支持圆角边框、固定尺寸、加载动画、占位符
+- [x] `CoverWidget` 支持 `load_cover(file_path)` 和 `load_cover_from_url(url, content_id)`
+- [x] 主页右上角显示教材封面，解析完成后自动更新
+- [x] 资源库右上角显示教材封面，搜索结果更新时自动更新
+- [x] 资源库点击列表项可切换显示对应教材封面
+- [x] 无封面时显示占位符，不影响其他功能
+- [x] 程序启动时自动清理过期封面缓存
+- [x] 版本号已递增（5.6.13 Beta 4 → 5.6.13 Beta 5）
+- [x] 产品更新信息.md 已更新

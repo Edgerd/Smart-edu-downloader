@@ -1,0 +1,23 @@
+# Checklist
+
+- [x] `_flatten_resources` 返回的资源字典包含 `publisher` 字段
+- [x] 教材版本从层级路径的 `display_name` 中正确提取（冀教版、人教版、北师大版、苏教版等）
+- [x] `_repair_search_term` 存在且正确修复"七下冀教版数"→"七年级 下册 冀教版 数学"
+- [x] `_repair_search_term` 正确修复"八上人教版语"→"八年级 上册 人教版 语文"
+- [x] `_repair_search_term` 对规范输入（如"冀教版 数学 八年级 下册"）不做修改
+- [x] `_extract_keywords` 能提取教材版本关键词（冀教版、人教版等）
+- [x] `_extract_keywords` 中"新版"被转换为"根据2022年版课程标准修订"
+- [x] `_extract_keywords` 过滤口语化填充词（的、课本、教材）
+- [x] `_extract_keywords` 正确展开册次缩写（七下→七年级+下册）
+- [x] `_calculate_smart_score` 的 full_text 包含 publisher 字段
+- [x] `_calculate_smart_score` 版本精确匹配时 +200 分
+- [x] `_calculate_smart_score` 版本不匹配时 -300 分
+- [x] `_calculate_smart_score` 年级+册次组合完整性有额外加分
+- [x] 搜索结果表格列数从 4 变为 5，表头包含"教材版本"
+- [x] 标题列宽度适度缩短以容纳新列（新增教材版本列占用100px，标题列自动缩减）
+- [x] `_display_current_page` 正确填充 publisher 列（索引 1）
+- [x] 学科列索引从 1 变为 2，年级列索引从 2 变为 3
+- [x] 操作列（选择按钮）索引从 3 调整为 4
+- [x] `_on_search_result_clicked` 仍能通过 row, column 正确获取 item（始终从 column 0 获取 title_item）
+- [x] 版本号已递增（5.6.12 Alpha 6 → Alpha 7）
+- [x] 更新日志已写入（产品更新信息.md 顶部新增 5.6.12 Alpha 7 条目）
