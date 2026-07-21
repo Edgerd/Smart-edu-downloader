@@ -3,7 +3,7 @@
 [![Stars](https://img.shields.io/github/stars/Edgerd/Smart-edu-downloader?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZD0iTTggLjI1YS43NS43NSAwIDAgMSAuNjczLjQxOGwxLjg4MiAzLjgxNSA0LjIxLjYxMmEuNzUuNzUgMCAwIDEgLjQxNiAxLjI3OWwtMy4wNDYgMi45Ny43MTkgNC4xOTJhLjc1MS43NTEgMCAwIDEtMS4wODguNzkxTDggMTIuMzQ3bC0zLjc2NiAxLjk4YS43NS43NSAwIDAgMS0xLjA4OC0uNzlsLjcyLTQuMTk0TC44MTggNi4zNzRhLjc1Ljc1IDAgMCAxIC40MTYtMS4yOGw0LjIxLS42MTFMNy4zMjcuNjY4QS43NS43NSAwIDAgMSA4IC4yNVoiIGZpbGw9IiNlYWM1NGYiLz48L3N2Zz4=&logoSize=auto&label=Stars&labelColor=444444&color=eac54f)](https://github.com/Edgerd/Smart-edu-downloader)
 [![Issues](https://img.shields.io/github/issues/Edgerd/Smart-edu-downloader?style=flat&label=Issues&labelColor=444444&color=1F883D)](https://github.com/Edgerd/Smart-edu-downloader/issues)
 [![动态](https://img.shields.io/badge/动态-BiliBili-00A4DB?style=flat&labelColor=444444&logoSize=auto)](https://space.bilibili.com/3537111380658360/dynamic)
-[![赞助](https://img.shields.io/badge/ 赞助-爱发电-946ce6?style=flat&labelColor=444444&logoSize=auto)]((https://ifdian.net/a/edgerd))
+[![赞助](https://img.shields.io/badge/ 赞助-爱发电-946ce6?style=flat&labelColor=444444&logoSize=auto)](https://ifdian.net/a/edgerd)
 
 一个基于 PyQt5 开发的教育资源下载工具，提供简洁的图形界面，支持智能搜索、资源浏览、批量下载和个性化设置。
 
