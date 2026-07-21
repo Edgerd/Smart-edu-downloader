@@ -19,15 +19,14 @@ logs/
 build/
 dist/
 *.spec
-.dev/dist/
-.dev/__pycache__/
+.dev/
 
 # IDE / 编辑器
 .idea/
 .vscode/
 *.swp
 *.swo
-
+.trae/
 # 系统文件
 .DS_Store
 Thumbs.db

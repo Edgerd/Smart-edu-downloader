@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QSizePoli
 from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QTimer, pyqtProperty, QPropertyAnimation, QEasingCurve, QEvent
 from PyQt5.QtGui import (
     QPainter, QColor, QPainterPath, QMouseEvent,
-    QPaintEvent, QEnterEvent, QFontMetrics
+    QPaintEvent, QEnterEvent, QFontMetrics, QRectF
 )
 
 from gui.fonts import get_harmonyos_family
@@ -42,6 +42,7 @@ class NavButton(QPushButton):
 
         self.setCursor(Qt.PointingHandCursor)
         self.setAttribute(Qt.WA_Hover, True)
+        self.setFlat(True)
 
     def set_active_color(self, color: str):
         """设置激活时的主题色"""
@@ -88,15 +89,12 @@ class NavButton(QPushButton):
     def _shape_path(self) -> QPainterPath:
         """生成圆角矩形裁剪路径"""
         path = QPainterPath()
-        rect = self.rect()
-        path.addRoundedRect(rect.x(), rect.y(), rect.width(), rect.height(), self._radius, self._radius)
+        rect = QRectF(self.rect())
+        path.addRoundedRect(rect, self._radius, self._radius)
         return path
 
     def paintEvent(self, event: QPaintEvent):
         """自定义绘制：背景淡入淡出 + 水波纹。"""
-        # 先让父类绘制子控件（图标和文字标签）
-        super().paintEvent(event)
-
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setRenderHint(QPainter.SmoothPixmapTransform)
@@ -123,10 +121,12 @@ class NavButton(QPushButton):
                 int(base_bg.alpha() + (active_bg.alpha() - base_bg.alpha()) * progress),
             )
 
+            # 使用圆角路径裁剪，避免背景溢出到圆角区域外形成方框
+            shape = self._shape_path()
             if bg.alpha() > 0:
-                painter.fillRect(self.rect(), bg)
+                painter.fillPath(shape, bg)
 
-            painter.setClipPath(self._shape_path())
+            painter.setClipPath(shape)
             for ripple in self._ripples:
                 ripple.draw(painter)
         finally:
@@ -293,6 +293,11 @@ class NavBar(QWidget):
         btn.setProperty("active", index == 0)
         btn.setContentsMargins(0, 0, 0, 0)
 
+        # 主页按钮初始即为激活状态，避免启动时从透明动画到激活色造成视觉闪烁
+        if index == 0:
+            btn._is_active = True
+            btn._active_progress = 1.0
+
         # 创建水平布局用于图标和文字
         btn_layout = QHBoxLayout()
         margin_h = 15
@@ -357,7 +362,7 @@ class NavBar(QWidget):
         """
         for i, btn in enumerate(self.nav_buttons):
             is_active = (i == index)
-            current_active = btn.property("active")
+            current_active = btn._is_active
 
             # 只对状态改变的按钮进行样式更新
             if current_active != is_active:
@@ -382,6 +387,7 @@ class NavBar(QWidget):
 
         # 播放背景淡入淡出动画
         btn.set_active(is_active)
+        btn.setProperty("active", is_active)
 
         # 更新文字标签 active 属性
         text_label = btn.findChild(QLabel, f"navText_{index}")
