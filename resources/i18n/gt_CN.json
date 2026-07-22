@@ -107,7 +107,8 @@
             "view_details": "展开细说",
             "copy_error": "复制翻车现场",
             "restart": "满血复活",
-            "hide_details": "收起详情"
+            "hide_details": "收起详情",
+            "report_bug": "给作者递BUG"
         },
         "donation": {
             "title": "(＃°Д°)投喂作者",
@@ -606,7 +607,14 @@
             "update_result_template": "当前版: {...}\n\n已是最新版，或请手搓查一查刷新一下。",
             "open_config_failed": "点启动设置老窝寄了:\n{...}",
             "check_update_failed": "查一查刷新一下寄了:\n{...}",
-            "restart_failed": "重启寄了:\n{...}"
+            "restart_failed": "重启寄了:\n{...}",
+            "crash_tester_title": "崩潰測試",
+            "crash_tester_desc": "模擬一次未處理異常，驗證錯誤提示窗口與崩潰日誌輸出",
+            "trigger_crash": "一鍵閃退",
+            "crash_tester_hint": "點擊後將彈出確認框，確認後在背景執行緒拋出異常並觸發全域崩潰處理器。",
+            "confirm_crash_title": "確認模擬崩潰",
+            "confirm_crash_message": "確定要模擬一次崩潰嗎？\n這將產生崩潰日誌並彈出錯誤提示窗口。",
+            "test_crash_message": "這是由調試工具觸發的模擬崩潰，用於測試錯誤提示窗口。"
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">能用命令：</span>\n<span style=\"color: #FFD700;\">help</span>    - 亮出来此帮助情报\n<span style=\"color: #FFD700;\">info</span>    - 亮出来程序情报\n<span style=\"color: #FFD700;\">clear</span>   - 一键清空控制台\n<span style=\"color: #FFD700;\">restart</span>  - 重启程序\n<span style=\"color: #FFD700;\">close</span>   - 润了程序\n<span style=\"color: #FFD700;\">version</span>  - 亮出来版\n<span style=\"color: #FFD700;\">author</span>  - 亮出来作者情报\n<span style=\"color: #AAAAAA;\">[任意Python码]</span> - 执行Python码",

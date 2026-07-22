@@ -1,7 +1,7 @@
 """Material Design 3 风格按钮组件"""
 from PyQt5.QtWidgets import QPushButton, QWidget, QGraphicsDropShadowEffect, QSizePolicy
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QPointF, QSize, QRectF, pyqtProperty, QPropertyAnimation, QEasingCurve
-from PyQt5.QtGui import QPainter, QColor, QPainterPath, QFont, QMouseEvent, QPaintEvent, QEnterEvent, QKeyEvent, QIcon, QFontMetrics
+from PyQt5.QtGui import QPainter, QPen, QColor, QPainterPath, QFont, QMouseEvent, QPaintEvent, QEnterEvent, QKeyEvent, QIcon, QFontMetrics
 from gui.fonts import body_font
 from gui.utils.color_utils import ripple_tint, mix
 from gui.widgets.ripple_effect import RippleEffect

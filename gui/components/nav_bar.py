@@ -4,10 +4,10 @@
 import os
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QSizePolicy
-from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QTimer, pyqtProperty, QPropertyAnimation, QEasingCurve, QEvent
+from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QTimer, pyqtProperty, QPropertyAnimation, QEasingCurve, QEvent, QRectF
 from PyQt5.QtGui import (
     QPainter, QColor, QPainterPath, QMouseEvent,
-    QPaintEvent, QEnterEvent, QFontMetrics, QRectF
+    QPaintEvent, QEnterEvent, QFontMetrics
 )
 
 from gui.fonts import get_harmonyos_family

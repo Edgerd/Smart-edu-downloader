@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QPointF, QByteArray, pyqtProperty, QPropertyAnimation, QEasingCurve
 from PyQt5.QtGui import (
     QPainter, QColor, QPainterPath, QFont, QMouseEvent,
-    QPaintEvent, QEnterEvent, QPixmap
+    QPaintEvent, QEnterEvent, QPixmap, QPen
 )
 from PyQt5.QtSvg import QSvgRenderer
 

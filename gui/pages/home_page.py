@@ -212,13 +212,14 @@ class HomePage(QWidget, HoverTooltipMixin):
         button_layout.addWidget(self.next_btn, 0, 2)
 
     def _set_nav_icon(self, button, icon_name):
-        """为导航按钮设置主题色 SVG 图标。
+        """为导航按钮设置白色 SVG 图标，不跟随主题色。
 
         Args:
             button: MaterialIconButton 实例。
             icon_name: SVG 图标文件名。
         """
-        pixmap = self.icon_manager.load_title_svg(icon_name, self._accent_color, size=(20, 20))
+        # 翻页按钮图标固定为白色，避免与主题色按钮背景融为一体
+        pixmap = self.icon_manager.load_title_svg(icon_name, "#FFFFFF", size=(20, 20))
         if pixmap and not pixmap.isNull():
             button.setIcon(QIcon(pixmap))
             button.setIconSize(pixmap.rect().size())

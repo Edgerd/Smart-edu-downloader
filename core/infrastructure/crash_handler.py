@@ -8,6 +8,7 @@
 import faulthandler
 from core.i18n import _
 import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -41,6 +42,26 @@ def _generate_crash_log_path() -> str:
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     filename = f'crash_{timestamp}.log'
     return os.path.join(get_crash_logs_dir(), filename)
+
+
+def _copy_crash_log_to_root(crash_log_path: str) -> Optional[str]:
+    """将崩溃日志复制到项目根目录，便于用户直接查看与反馈。
+
+    Args:
+        crash_log_path: 原始崩溃日志文件路径。
+
+    Returns:
+        项目根目录下的崩溃日志路径；复制失败时返回 None。
+    """
+    try:
+        from core.infrastructure.path_resolver import get_project_root
+        project_root = get_project_root()
+        filename = os.path.basename(crash_log_path)
+        root_path = os.path.join(project_root, filename)
+        shutil.copy2(crash_log_path, root_path)
+        return root_path
+    except Exception:
+        return None
 
 def _build_summary(exc_type: Type[BaseException], exc_value: BaseException, filepath: str, lineno: int) -> str:
     """构建崩溃摘要文本。"""
@@ -97,7 +118,8 @@ def _handle_exception(exc_type: Type[BaseException], exc_value: BaseException, e
     try:
         crash_log_path = _generate_crash_log_path()
         _write_crash_log(crash_log_path, exc_type, exc_value, exc_traceback)
-        _launch_crash_reporter(crash_log_path)
+        root_crash_log_path = _copy_crash_log_to_root(crash_log_path)
+        _launch_crash_reporter(root_crash_log_path or crash_log_path)
     except Exception:
         pass
     sys.__excepthook__(exc_type, exc_value, exc_traceback)

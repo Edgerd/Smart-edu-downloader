@@ -107,7 +107,8 @@
             "view_details": "👀📋",
             "copy_error": "📋❌ℹ️",
             "restart": "🔄🚀",
-            "hide_details": "🙈📋"
+            "hide_details": "🙈📋",
+            "report_bug": "Report to author"
         },
         "donation": {
             "title": "💝 ✍️",
@@ -606,7 +607,14 @@
             "update_result_template": "📌: {...}\n\n✅📌，🔍📌。",
             "open_config_failed": "📂⚙️🗂️💥:\n{...}",
             "check_update_failed": "🔍📌💥:\n{...}",
-            "restart_failed": "🔄🚀💥:\n{...}"
+            "restart_failed": "🔄🚀💥:\n{...}",
+            "crash_tester_title": "Crash Test",
+            "crash_tester_desc": "Simulate an unhandled exception to verify the error dialog and crash log output",
+            "trigger_crash": "Trigger Crash",
+            "crash_tester_hint": "A confirmation dialog will appear. After confirmation, an exception is raised in a background thread to trigger the global crash handler.",
+            "confirm_crash_title": "Confirm Crash Simulation",
+            "confirm_crash_message": "Are you sure you want to simulate a crash?\nThis will generate a crash log and open the error report dialog.",
+            "test_crash_message": "This is a simulated crash triggered by the debug tool for testing the error report dialog."
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">💻：</span>\n<span style=\"color: #FFD700;\">help</span>    - 💻\n<span style=\"color: #FFD700;\">info</span>    - ℹ️\n<span style=\"color: #FFD700;\">clear</span>   - 🧹💻\n<span style=\"color: #FFD700;\">restart</span>  - 🔄🚀\n<span style=\"color: #FFD700;\">close</span>   - 🚪\n<span style=\"color: #FFD700;\">version</span>  - 📌\n<span style=\"color: #FFD700;\">author</span>  - ✍️\n<span style=\"color: #AAAAAA;\">[Python💻]</span> - Python💻",

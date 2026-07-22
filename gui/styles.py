@@ -350,6 +350,62 @@ def get_global_scrollbar_style(accent_color: str = None) -> str:
     """
 
 
+def get_message_box_style(accent_color: str = None) -> str:
+    """获取 QMessageBox 全局样式，避免原生弹窗在暗色系统主题下显示黑底。
+
+    Args:
+        accent_color: 主题强调色；为 None 时自动读取当前主题色。
+
+    Returns:
+        用于 QApplication.setStyleSheet 的样式字符串。
+    """
+    if accent_color is None:
+        accent_color = load_primary_color()
+    hover_color = darken(accent_color, 10)
+    pressed_color = darken(accent_color, 20)
+    return f"""
+        QMessageBox {{
+            background-color: #FFFFFF;
+            border-radius: 8px;
+        }}
+        QMessageBox QLabel {{
+            color: #333333;
+            font-size: 13px;
+        }}
+        QMessageBox QPushButton {{
+            background-color: {accent_color};
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 14px;
+            min-width: 70px;
+            font-size: 13px;
+        }}
+        QMessageBox QPushButton:hover {{
+            background-color: {hover_color};
+        }}
+        QMessageBox QPushButton:pressed {{
+            background-color: {pressed_color};
+        }}
+        QMessageBox QPushButton:default {{
+            background-color: {accent_color};
+        }}
+    """
+
+
+def apply_global_message_box_style(app, accent_color: str = None) -> None:
+    """为整个应用设置 QMessageBox 全局样式。
+
+    Args:
+        app: QApplication 实例。
+        accent_color: 主题强调色；为 None 时自动读取当前主题色。
+    """
+    try:
+        app.setStyleSheet(get_message_box_style(accent_color))
+    except Exception as e:
+        log("WARNING", f"应用 QMessageBox 全局样式失败: {e}")
+
+
 def apply_menu_style(menu, accent_color: str = None) -> None:
     """为 QMenu 应用 Fluent 风格样式（解决部分平台下系统默认样式导致的黑色背景问题）
 

@@ -107,7 +107,8 @@
             "view_details": "詳細を見る",
             "copy_error": "エラーをコピー",
             "restart": "再起動",
-            "hide_details": "詳細を隠す"
+            "hide_details": "詳細を隠す",
+            "report_bug": "作者に報告"
         },
         "donation": {
             "title": "(＃°Д°) 作者を支援",
@@ -606,7 +607,14 @@
             "update_result_template": "現在のバージョン：{...}\n\n最新版です。手動で確認することもできます。",
             "open_config_failed": "設定フォルダを開けませんでした：\n{...}",
             "check_update_failed": "アップデート確認に失敗しました：\n{...}",
-            "restart_failed": "再起動に失敗しました：\n{...}"
+            "restart_failed": "再起動に失敗しました：\n{...}",
+            "crash_tester_title": "クラッシュテスト",
+            "crash_tester_desc": "未処理の例外をシミュレートし、エラーダイアログとクラッシュログの出力を確認します",
+            "trigger_crash": "ワンクリッククラッシュ",
+            "crash_tester_hint": "クリックすると確認ダイアログが表示されます。確認後、バックグラウンドスレッドで例外を発生させ、グローバルクラッシュハンドラを起動します。",
+            "confirm_crash_title": "クラッシュをシミュレート",
+            "confirm_crash_message": "クラッシュをシミュレートしますか？\nクラッシュログが生成され、エラーダイアログが表示されます。",
+            "test_crash_message": "これはデバッグツールによってトリガーされたテスト用のクラッシュです。"
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">使用可能なコマンド：</span>\n<span style=\"color: #FFD700;\">help</span>    - このヘルプを表示\n<span style=\"color: #FFD700;\">info</span>    - プログラム情報を表示\n<span style=\"color: #FFD700;\">clear</span>   - コンソールをクリア\n<span style=\"color: #FFD700;\">restart</span>  - プログラムを再起動\n<span style=\"color: #FFD700;\">close</span>   - プログラムを終了\n<span style=\"color: #FFD700;\">version</span>  - バージョンを表示\n<span style=\"color: #FFD700;\">author</span>  - 作者情報を表示\n<span style=\"color: #AAAAAA;\">[任意のPythonコード]</span> - Pythonコードを実行",

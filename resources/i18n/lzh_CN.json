@@ -107,7 +107,8 @@
             "view_details": "觀詳",
             "copy_error": "複製錯誤訊息",
             "restart": "重啟",
-            "hide_details": "隱詳"
+            "hide_details": "隱詳",
+            "report_bug": "報於作者"
         },
         "donation": {
             "title": "(＃°Д°) 贊助作者",
@@ -606,7 +607,14 @@
             "update_result_template": "當前版本：{...}\n\n已是最新版本，或請手動檢查更新。",
             "open_config_failed": "打開配置目錄失敗：\n{...}",
             "check_update_failed": "檢查更新失敗：\n{...}",
-            "restart_failed": "重啟失敗：\n{...}"
+            "restart_failed": "重啟失敗：\n{...}",
+            "crash_tester_title": "崩潰測試",
+            "crash_tester_desc": "模擬一次不可復之錯，以驗證錯誤提示與崩潰日誌",
+            "trigger_crash": "一鍵閃退",
+            "crash_tester_hint": "點擊後將出確認框，確認後於後台線程拋出異常，觸發全域崩潰處理。",
+            "confirm_crash_title": "確認模擬崩潰",
+            "confirm_crash_message": "確定要模擬一次崩潰乎？\n此舉將生成崩潰日誌並彈出錯誤提示窗。",
+            "test_crash_message": "此乃調試工具所觸發之模擬崩潰，用以測試錯誤提示窗口。"
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">可用命令：</span>\n<span style=\"color: #FFD700;\">help</span>    - 顯示此幫助\n<span style=\"color: #FFD700;\">info</span>    - 顯示程序信息\n<span style=\"color: #FFD700;\">clear</span>   - 清空控制臺\n<span style=\"color: #FFD700;\">restart</span>  - 重啟程序\n<span style=\"color: #FFD700;\">close</span>   - 關閉程序\n<span style=\"color: #FFD700;\">version</span>  - 顯示版本\n<span style=\"color: #FFD700;\">author</span>  - 顯示作者信息\n<span style=\"color: #AAAAAA;\">[任意Python代碼]</span> - 執行Python代碼",

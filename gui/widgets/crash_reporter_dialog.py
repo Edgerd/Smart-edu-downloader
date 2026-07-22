@@ -10,7 +10,7 @@ import sys
 import threading
 import webbrowser
 from typing import Optional, Tuple
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QDialog, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QSizePolicy, QVBoxLayout, QWidget
 try:
@@ -39,6 +39,15 @@ def _load_primary_color() -> str:
         return load_primary_color()
     except Exception:
         return '#1277DD'
+
+
+def _load_background_color() -> str:
+    """加载当前内容区背景色，失败时回退到项目默认值。"""
+    try:
+        from gui.styles import load_background_color
+        return load_background_color()
+    except Exception:
+        return '#E8F4FD'
 
 
 BUTTON_HEIGHT = 34
@@ -78,10 +87,13 @@ class _ProcessReaper:
 class CrashReporterDialog(QDialog):
     """崩溃提示对话框。"""
 
+    _open_url_signal = pyqtSignal(str)
+
     def __init__(self, crash_log_path: str, project_root: Optional[str]=None, parent: Optional[QWidget]=None) -> None:
         """初始化崩溃提示对话框。"""
         super().__init__(parent)
         self._accent_color = _load_primary_color()
+        self._background_color = _load_background_color()
         self._crash_log_path = crash_log_path
         self._project_root = project_root or self._calculate_project_root()
         self._summary = ''
@@ -92,6 +104,7 @@ class CrashReporterDialog(QDialog):
         self._lineno = 0
         self._parse_log()
         self._init_ui()
+        self._open_url_signal.connect(self._open_url)
 
     @staticmethod
     def _calculate_project_root() -> str:
@@ -150,6 +163,7 @@ class CrashReporterDialog(QDialog):
         self.setWindowFlags(Qt.Dialog | Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint)
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.setStyleSheet(f'QDialog {{ background-color: {self._background_color}; }}')
         main_layout = QVBoxLayout()
         main_layout.setSpacing(10)
         main_layout.setContentsMargins(20, 20, 20, 16)
@@ -226,6 +240,9 @@ class CrashReporterDialog(QDialog):
         copy_btn = self._create_button(_('dialogs.crash_reporter.copy_error'))
         copy_btn.clicked.connect(self._copy_error_info)
         button_layout.addWidget(copy_btn)
+        self._report_bug_btn = self._create_button(_('dialogs.crash_reporter.report_bug'), primary=False)
+        self._report_bug_btn.clicked.connect(self._on_report_bug)
+        button_layout.addWidget(self._report_bug_btn)
         restart_btn = self._create_button(_('dialogs.crash_reporter.restart'))
         restart_btn.clicked.connect(self._restart_app)
         button_layout.addWidget(restart_btn)
@@ -251,15 +268,17 @@ class CrashReporterDialog(QDialog):
         return btn
 
     def update_theme_colors(self, primary: str, background: str) -> None:
-        """响应主题色变化，刷新标题和按钮颜色。
+        """响应主题色变化，刷新标题、背景和按钮颜色。
 
         Args:
             primary: 新的主题主色。
             background: 新的内容区背景色。
         """
         self._accent_color = primary
+        self._background_color = background
         if hasattr(self, '_title_label') and self._title_label is not None:
             self._title_label.setStyleSheet(f'color: {primary}; font-weight: bold;')
+        self.setStyleSheet(f'QDialog {{ background-color: {background}; }}')
         # 已创建的按钮为 QPushButton 或 MaterialButton，重新应用样式较复杂；
         # 崩溃提示对话框通常在崩溃后显示，按钮会在下次创建时读取新主题色。
 
@@ -319,6 +338,44 @@ class CrashReporterDialog(QDialog):
         except Exception:
             pass
         self.accept()
+
+    def _on_report_bug(self) -> None:
+        """点击“给作者捉虫”按钮后，后台检测网络并跳转反馈入口。"""
+        if hasattr(self, '_report_bug_btn') and self._report_bug_btn is not None:
+            self._report_bug_btn.setEnabled(False)
+        threading.Thread(target=self._check_network_and_open, daemon=True).start()
+
+    def _check_network_and_open(self) -> None:
+        """检测 github.com 连通性，并通过信号回到主线程打开反馈链接。"""
+        url = self._choose_report_url()
+        self._open_url_signal.emit(url)
+
+    def _choose_report_url(self) -> str:
+        """根据 github.com 的连通性选择反馈链接。"""
+        if self._can_reach_github():
+            return 'https://github.com/Edgerd/Smart-edu-downloader/issues'
+        return 'https://message.bilibili.com/#/whisper/mid3537111380658360'
+
+    def _can_reach_github(self) -> bool:
+        """通过 ping 检测是否可以访问 github.com。"""
+        if sys.platform == 'win32':
+            cmd = ['ping', 'github.com', '-n', '1', '-w', '2000']
+        else:
+            cmd = ['ping', 'github.com', '-c', '1', '-W', '2']
+        try:
+            result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    def _open_url(self, url: str) -> None:
+        """在主线程中打开反馈链接并恢复按钮状态。"""
+        try:
+            webbrowser.open(url)
+        except Exception:
+            pass
+        if hasattr(self, '_report_bug_btn') and self._report_bug_btn is not None:
+            self._report_bug_btn.setEnabled(True)
 
 def main() -> int:
     """独立测试入口。"""

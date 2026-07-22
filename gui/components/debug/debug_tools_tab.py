@@ -27,7 +27,7 @@ from core.infrastructure.logger import log
 from core.i18n import _
 from .tools import (
     NetworkDiagnosticWidget, CacheManagerWidget,
-    LogFileManagerWidget, QuickActionsWidget,
+    LogFileManagerWidget, QuickActionsWidget, CrashTesterWidget,
 )
 
 
@@ -90,6 +90,14 @@ class DebugToolsTab(QWidget):
         )
         self.error_group.add_widget(self._build_error_capture_widget())
         scroll_layout.addWidget(self.error_group)
+
+        self.crash_test_group = self._create_group(
+            _("debug.tools.crash_tester_title"),
+            _("debug.tools.crash_tester_desc"),
+        )
+        self.crash_tester = CrashTesterWidget(show_title=False)
+        self.crash_test_group.add_widget(self.crash_tester)
+        scroll_layout.addWidget(self.crash_test_group)
 
         self.network_group = self._create_group(
             _("debug.tools.network_diagnostic"),
@@ -640,8 +648,8 @@ class DebugToolsTab(QWidget):
         for group in (
             self.notification_group, self.variable_group,
             self.performance_group, self.error_group,
-            self.network_group, self.cache_group,
-            self.log_group, self.quick_group,
+            self.crash_test_group, self.network_group,
+            self.cache_group, self.log_group, self.quick_group,
         ):
             if group is not None and hasattr(group, "update_accent_color"):
                 group.update_accent_color(primary)

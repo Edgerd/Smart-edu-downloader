@@ -107,7 +107,8 @@
             "view_details": "Show details",
             "copy_error": "Copy error",
             "restart": "Restart",
-            "hide_details": "Hide details"
+            "hide_details": "Hide details",
+            "report_bug": "Report to author"
         },
         "donation": {
             "title": "(＃°Д°) Support the Author",
@@ -606,7 +607,14 @@
             "update_result_template": "Current version: {...}\n\nAlready up to date, or check manually.",
             "open_config_failed": "Failed to open config folder:\n{...}",
             "check_update_failed": "Failed to check for updates:\n{...}",
-            "restart_failed": "Restart failed:\n{...}"
+            "restart_failed": "Restart failed:\n{...}",
+            "crash_tester_title": "Crash Test",
+            "crash_tester_desc": "Simulate an unhandled exception to verify the error dialog and crash log output",
+            "trigger_crash": "Trigger Crash",
+            "crash_tester_hint": "A confirmation dialog will appear. After confirmation, an exception is raised in a background thread to trigger the global crash handler.",
+            "confirm_crash_title": "Confirm Crash Simulation",
+            "confirm_crash_message": "Are you sure you want to simulate a crash?\nThis will generate a crash log and open the error report dialog.",
+            "test_crash_message": "This is a simulated crash triggered by the debug tool for testing the error report dialog."
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">Available commands:</span>\n<span style=\"color: #FFD700;\">help</span>    - Show this help\n<span style=\"color: #FFD700;\">info</span>    - Show program info\n<span style=\"color: #FFD700;\">clear</span>   - Clear console\n<span style=\"color: #FFD700;\">restart</span>  - Restart program\n<span style=\"color: #FFD700;\">close</span>   - Close program\n<span style=\"color: #FFD700;\">version</span>  - Show version\n<span style=\"color: #FFD700;\">author</span>  - Show author info\n<span style=\"color: #AAAAAA;\">[any Python code]</span> - Execute Python code",

@@ -107,7 +107,8 @@
             "view_details": "查看详情",
             "copy_error": "复制错误信息",
             "restart": "重新启动",
-            "hide_details": "隐藏详情"
+            "hide_details": "隐藏详情",
+            "report_bug": "给作者捉虫"
         },
         "donation": {
             "title": "(＃°Д°)支持作者",
@@ -686,7 +687,14 @@
             "update_result_template": "当前版本: {...}\n\n已是最新版本，或请手动检查更新。",
             "open_config_failed": "打开配置目录失败:\n{...}",
             "check_update_failed": "检查更新失败:\n{...}",
-            "restart_failed": "重启失败:\n{...}"
+            "restart_failed": "重启失败:\n{...}",
+            "crash_tester_title": "崩溃测试",
+            "crash_tester_desc": "模拟一次未处理异常，验证错误提示窗口与崩溃日志输出",
+            "trigger_crash": "一键闪退",
+            "crash_tester_hint": "点击后将弹出确认框，确认后在后台线程抛出异常并触发全局崩溃处理器。",
+            "confirm_crash_title": "确认模拟崩溃",
+            "confirm_crash_message": "确定要模拟一次崩溃吗？\n这将生成崩溃日志并弹出错误提示窗口。",
+            "test_crash_message": "这是由调试工具触发的模拟崩溃，用于测试错误提示窗口。"
         },
         "console": {
             "help_text": "<span style=\"color: #00FF00;\">可用命令：</span>\n<span style=\"color: #FFD700;\">help</span>    - 显示此帮助信息\n<span style=\"color: #FFD700;\">info</span>    - 显示程序信息\n<span style=\"color: #FFD700;\">clear</span>   - 清空控制台\n<span style=\"color: #FFD700;\">restart</span>  - 重启程序\n<span style=\"color: #FFD700;\">close</span>   - 关闭程序\n<span style=\"color: #FFD700;\">version</span>  - 显示版本\n<span style=\"color: #FFD700;\">author</span>  - 显示作者信息\n<span style=\"color: #AAAAAA;\">[任意Python代码]</span> - 执行Python代码",

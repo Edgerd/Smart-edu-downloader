@@ -1,4 +1,4 @@
-# Smart Edu Downloader 下载器
+# 智慧中小学课本下载工具
 
 [![Stars](https://img.shields.io/github/stars/Edgerd/Smart-edu-downloader?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZD0iTTggLjI1YS43NS43NSAwIDAgMSAuNjczLjQxOGwxLjg4MiAzLjgxNSA0LjIxLjYxMmEuNzUuNzUgMCAwIDEgLjQxNiAxLjI3OWwtMy4wNDYgMi45Ny43MTkgNC4xOTJhLjc1MS43NTEgMCAwIDEtMS4wODguNzkxTDggMTIuMzQ3bC0zLjc2NiAxLjk4YS43NS43NSAwIDAgMS0xLjA4OC0uNzlsLjcyLTQuMTk0TC44MTggNi4zNzRhLjc1Ljc1IDAgMCAxIC40MTYtMS4yOGw0LjIxLS42MTFMNy4zMjcuNjY4QS43NS43NSAwIDAgMSA4IC4yNVoiIGZpbGw9IiNlYWM1NGYiLz48L3N2Zz4=&logoSize=auto&label=Stars&labelColor=444444&color=eac54f)](https://github.com/Edgerd/Smart-edu-downloader)
 [![Issues](https://img.shields.io/github/issues/Edgerd/Smart-edu-downloader?style=flat&label=Issues&labelColor=444444&color=1F883D)](https://github.com/Edgerd/Smart-edu-downloader/issues)
@@ -10,9 +10,9 @@
 > 当前版本：`5.6.17 Beta 2`  
 > 作者：[Edgerd](https://space.bilibili.com/3537111380658360)
 
-## 主要功能
+## 📖 主要功能
 
-- 智能解析教育平台 URL，自动解析课本链接，也可输入中文关键词搜索教材资源。
+- 智能解析或检索教育平台 URL 自动解析课本链接，也可输入中文关键词搜索教材资源。
 - 可按学科、年级、版本等维度筛选和浏览课本资源。
 - 支持多线程下载、下载历史记录、文件自动分类命名。
 - 教材封面预览，异步加载教材封面，本地缓存 7 天自动清理。
@@ -31,13 +31,13 @@
 ### 一、下载程序
 
 #### 1. 下载文件
-打开右侧 Releases 下载程序文件。
+打开右侧 Releases 下载程序文件
 
 #### 2. 解压程序
-使用压缩软件解压程序。
+使用压缩软件解压程序
 
 #### 3. 开始使用
-启动程序，按新手引导使用。
+启动程序 按新手引导使用
 
 ### 二、自行打包
 

@@ -207,11 +207,12 @@ def main():
     # 初始化 Fluent 主题
     try:
         from qfluentwidgets import setTheme, Theme, setThemeColor
-        from gui.styles import load_primary_color
+        from gui.styles import load_primary_color, apply_global_message_box_style
 
         accent_color = load_primary_color()
         setTheme(Theme.LIGHT)
         setThemeColor(accent_color)
+        apply_global_message_box_style(app, accent_color)
     except Exception as e:
         log("ERROR", f"初始化 Fluent 主题失败: {e}")
         QMessageBox.critical(
