@@ -30,6 +30,13 @@ class _SSLAdapter(HTTPAdapter):
     部分教育平台 CDN 仍使用 1024 位 RSA 证书，在 OpenSSL 3.0+ 默认策略下会触发
     ``SSLCertVerificationError: certificate key too weak``。通过显式设置
     ``DEFAULT:@SECLEVEL=1`` 兼容此类证书，同时保留证书链校验。
+
+    注意：
+    关闭 SSL 验证时，urllib3 会尝试将 ``verify_mode`` 设为 ``CERT_NONE``；
+    若 ``SSLContext.check_hostname`` 仍为 True，Python 会抛出
+    ``Cannot set verify_mode to CERT_NONE when check_hostname is enabled``。
+    因此本适配器统一关闭 ``check_hostname``，由 ``verify_mode`` / ``verify``
+    参数控制是否校验证书链，避免单请求降级重试时崩溃。
     """
 
     def init_poolmanager(self, *args, **kwargs):
@@ -38,6 +45,7 @@ class _SSLAdapter(HTTPAdapter):
             context.set_ciphers('DEFAULT:@SECLEVEL=1')
         except ssl.SSLError:
             pass
+        context.check_hostname = False
         kwargs['ssl_context'] = context
         return super().init_poolmanager(*args, **kwargs)
 
@@ -208,7 +216,11 @@ class HttpClient:
         Args:
             enabled: True 表示验证证书，False 表示跳过验证。
         """
-        self._ssl_verify = bool(enabled)
+        new_value = bool(enabled)
+        if new_value == self._ssl_verify:
+            return
+
+        self._ssl_verify = new_value
         if not self._ssl_verify:
             # 关闭验证时屏蔽 urllib3 的证书警告，避免日志被重复刷屏。
             try:
