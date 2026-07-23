@@ -114,7 +114,9 @@
             "title": "(＃°Д°)投喂作者",
             "message": "如果觉得这玩意儿好用，能给作者整瓶快乐水吗？",
             "qr_missing": "赞赏码图片跑路了",
-            "scan_tip": "扫码投喂，感恩的心"
+            "scan_tip": "扫码投喂，感恩的心",
+            "afdian_button": "打开爱发电",
+            "afdian_desc": "也可在爱发电长期支持作者开发"
         },
         "download_dir": {
             "title": "挑个下载老窝",
@@ -181,6 +183,8 @@
         "support_author_message": "如果这项目帮到了你，欢迎投喂作者！🙏",
         "donate_button": "💝 赞赏投喂",
         "bilibili_button": "📺 B站老巢",
+        "afdian_button": "爱发电",
+        "afdian_desc": "在爱发电长期支持作者",
         "confirm_clear_history": "确定要清空所有黑历史吗？",
         "log_file_not_exist": "小本本跑路了",
         "history_cleared": "黑历史已清空！",
@@ -768,6 +772,7 @@
             "view_log": "查看小本本 - 点启动小本本档子查看程序运行小本本",
             "donation": "投喂支持 - 支持作者启动发",
             "bilibili": "B站老巢 - 串门作者B站老巢",
+            "afdian": "爱发电 - 在爱发电投喂作者",
             "download_history_table": "启动冲黑黑历史表 - 查看最近启动冲小本本",
             "link_history_table": "链子搞黑历史表 - 查看链子搞小本本",
             "search_history_table": "搜一搜黑历史表 - 查看宝库搜一搜小本本"
@@ -1077,9 +1082,9 @@
         },
         "license": {
             "title": "用户协议",
-            "subtitle": "请阅读并同意隐私政策，不然没法继续用",
-            "agree_privacy_policy": "我已阅读并同意《{privacy_policy}》",
-            "privacy_policy": "隐私政策",
+            "subtitle": "请阅读并同意用户协议，不然没法继续用",
+            "agree_user_agreement": "我已阅读并同意《{user_agreement}》",
+            "user_agreement": "用户协议",
             "next_tip": "下一步",
             "anti_fraud_title": "防骗小课堂",
             "anti_fraud_content": "这软件是纯纯白嫖的，官方没有一丁点付费服务。原作者B站老巢：{link}。如果你是花钱找人装的，遇到问题先找卖家扯皮。",
@@ -1143,8 +1148,8 @@
             "description": "准备好开始下载课本了！",
             "finish_tip": "完成"
         },
-        "privacy_policy": {
-            "title": "隐私政策",
+        "user_agreement": {
+            "title": "用户协议",
             "effective_date": "生效日期",
             "close": "关闭"
         },

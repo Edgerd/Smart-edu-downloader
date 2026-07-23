@@ -83,7 +83,7 @@ def check_dependencies():
         log("ERROR", "缺少依赖项:")
         for package, description in missing_packages:
             log("ERROR", f"  - {package}: {description}")
-        log("ERROR", "请运行: pip install -r requirements.txt")
+        log("ERROR", "请运行: pip install -r resources/requirements.txt")
         sys.exit(1)
 
 
@@ -350,12 +350,6 @@ def main():
 def example_switch_theme():
     """开关按钮主题色演示示例"""
     from gui.examples.switch_theme_demo import run_demo
-    run_demo()
-
-
-def example_qt_material_widget():
-    """qt-material 控件样式与热重载测试示例"""
-    from gui.examples.qt_material_widget_demo import run_demo
     run_demo()
 
 

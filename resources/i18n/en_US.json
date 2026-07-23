@@ -114,7 +114,9 @@
             "title": "(＃°Д°) Support the Author",
             "message": "Loving it? Buy the author a drink! (≧▽≦)",
             "qr_missing": "Donation QR code not found",
-            "scan_tip": "Scan to support the author — thanks!"
+            "scan_tip": "Scan to support the author — thanks!",
+            "afdian_button": "Open Aifadian",
+            "afdian_desc": "You can also support the author on Aifadian"
         },
         "download_dir": {
             "title": "Pick a download folder",
@@ -181,6 +183,8 @@
         "support_author_message": "Finding this useful? Show the author some love! 🙏",
         "donate_button": "💝 Tip the Author",
         "bilibili_button": "📺 Bilibili",
+        "afdian_button": "Aifadian",
+        "afdian_desc": "Support the author on Aifadian",
         "confirm_clear_history": "Clear all history?",
         "log_file_not_exist": "Log file not found",
         "history_cleared": "History cleared!",
@@ -768,6 +772,7 @@
             "view_log": "View log — open the log file",
             "donation": "Tip the author — support development",
             "bilibili": "Bilibili — visit the author's page",
+            "afdian": "Aifadian — support the author on Aifadian",
             "download_history_table": "Download history — recent downloads",
             "link_history_table": "Link history — processed links",
             "search_history_table": "Search history — resource library searches"
@@ -1077,9 +1082,9 @@
         },
         "license": {
             "title": "License Terms",
-            "subtitle": "Please read and agree to the Privacy Policy to continue",
-            "agree_privacy_policy": "I have read and agree to the {privacy_policy}",
-            "privacy_policy": "Privacy Policy",
+            "subtitle": "Please read and agree to the User Agreement to continue",
+            "agree_user_agreement": "I have read and agree to the {user_agreement}",
+            "user_agreement": "User Agreement",
             "next_tip": "Next",
             "anti_fraud_title": "Anti-Fraud Reminder",
             "anti_fraud_content": "This software is completely free, and the official team does not provide any paid support. The original author's Bilibili homepage: {link}. If you obtained this app through paid channels, please seek help from the seller first.",
@@ -1143,8 +1148,8 @@
             "description": "Ready to start downloading textbooks!",
             "finish_tip": "Finish"
         },
-        "privacy_policy": {
-            "title": "Privacy Policy",
+        "user_agreement": {
+            "title": "User Agreement",
             "effective_date": "Effective Date",
             "close": "Close"
         },

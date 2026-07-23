@@ -114,7 +114,9 @@
             "title": "💝 ✍️",
             "message": "😊👍，💝✍️！",
             "qr_missing": "📱💰🖼️❌",
-            "scan_tip": "📱🔍💝✍️🙏"
+            "scan_tip": "📱🔍💝✍️🙏",
+            "afdian_button": "🔗⚡🐟",
+            "afdian_desc": "⚡🐟💝✍️🌱"
         },
         "download_dir": {
             "title": "📂 ⬇️📍",
@@ -181,6 +183,8 @@
         "support_author_message": "👍，💝✍️！🙏",
         "donate_button": "💝 💰",
         "bilibili_button": "📺 B站🏠",
+        "afdian_button": "⚡🐟",
+        "afdian_desc": "⚡🐟💝✍️🌱",
         "confirm_clear_history": "🗑️📜？",
         "log_file_not_exist": "📋📄❌",
         "history_cleared": "📜🗑️！",
@@ -768,6 +772,7 @@
             "view_log": "📋 - 📋📄",
             "donation": "💝✍️",
             "bilibili": "📺B站🏠",
+            "afdian": "⚡🐟💝✍️",
             "download_history_table": "📥📜",
             "link_history_table": "🔗📜",
             "search_history_table": "🔍📜"
@@ -1077,9 +1082,9 @@
         },
         "license": {
             "title": "📜",
-            "subtitle": "✅🔒📖➡️",
-            "agree_privacy_policy": "✅📖 {privacy_policy}",
-            "privacy_policy": "🔒📖",
+            "subtitle": "✅📜➡️",
+            "agree_user_agreement": "✅📖 {user_agreement}",
+            "user_agreement": "📜",
             "next_tip": "➡️",
             "anti_fraud_title": "🚫🎭",
             "anti_fraud_content": "🆓📥 🚫💰 📺🔗{link} 💰📥🤝💼 📞🆘",
@@ -1143,8 +1148,8 @@
             "description": "📚⬇️🚀",
             "finish_tip": "🏁"
         },
-        "privacy_policy": {
-            "title": "🔒📖",
+        "user_agreement": {
+            "title": "📜",
             "effective_date": "📅",
             "close": "❌"
         },

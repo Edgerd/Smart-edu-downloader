@@ -114,7 +114,9 @@
             "title": "(＃°Д°)支持作者",
             "message": "如果觉得这个软件好用，可以请作者喝瓶饮料吗？",
             "qr_missing": "赞赏码图片未找到",
-            "scan_tip": "扫码赞赏，感谢支持"
+            "scan_tip": "扫码赞赏，感谢支持",
+            "afdian_button": "打开爱发电",
+            "afdian_desc": "也可在爱发电长期支持作者开发"
         },
         "download_dir": {
             "title": "选择下载位置",
@@ -181,6 +183,8 @@
         "support_author_message": "如果这个项目对您有帮助，欢迎支持作者！🙏",
         "donate_button": "💝 赞赏支持",
         "bilibili_button": "📺 B站主页",
+        "afdian_button": "爱发电",
+        "afdian_desc": "在爱发电长期支持作者",
         "confirm_clear_history": "确定要清空所有历史记录吗？",
         "log_file_not_exist": "日志文件不存在",
         "history_cleared": "历史记录已清空！",
@@ -848,6 +852,7 @@
             "view_log": "查看日志 - 打开日志文件查看程序运行日志",
             "donation": "赞赏支持 - 支持作者开发",
             "bilibili": "B站主页 - 访问作者B站主页",
+            "afdian": "爱发电 - 在爱发电支持作者",
             "download_history_table": "下载历史记录表格 - 查看最近下载记录",
             "link_history_table": "链接处理历史表格 - 查看链接处理记录",
             "search_history_table": "搜索历史表格 - 查看资源库搜索记录"
@@ -1157,9 +1162,9 @@
         },
         "license": {
             "title": "许可条款",
-            "subtitle": "请阅读并同意隐私政策以继续使用",
-            "agree_privacy_policy": "我已阅读并同意《{privacy_policy}》",
-            "privacy_policy": "隐私政策",
+            "subtitle": "请阅读并同意用户协议以继续使用",
+            "agree_user_agreement": "我已阅读并同意《{user_agreement}》",
+            "user_agreement": "用户协议",
             "next_tip": "下一步",
             "anti_fraud_title": "防诈骗提醒",
             "anti_fraud_content": "本软件完全免费，官方不提供任何付费支持服务。源作者B站首页：{link}。如通过付费方式获得本应用，请优先向卖家求助。",
@@ -1223,8 +1228,8 @@
             "description": "准备好开始下载课本了！",
             "finish_tip": "完成"
         },
-        "privacy_policy": {
-            "title": "隐私政策",
+        "user_agreement": {
+            "title": "用户协议",
             "effective_date": "生效日期",
             "close": "关闭"
         },

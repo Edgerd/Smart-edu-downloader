@@ -1,6 +1,6 @@
 """Material Design 3 风格按钮组件"""
 from PyQt5.QtWidgets import QPushButton, QWidget, QGraphicsDropShadowEffect, QSizePolicy
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QPointF, QSize, QRectF, pyqtProperty, QPropertyAnimation, QEasingCurve
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QPoint, QPointF, QSize, QRect, QRectF, pyqtProperty, QPropertyAnimation, QEasingCurve
 from PyQt5.QtGui import QPainter, QPen, QColor, QPainterPath, QFont, QMouseEvent, QPaintEvent, QEnterEvent, QKeyEvent, QIcon, QFontMetrics
 from gui.fonts import body_font
 from gui.utils.color_utils import ripple_tint, mix
@@ -114,7 +114,10 @@ class MaterialButton(QPushButton):
         font.setPixelSize(font_size)
         metrics = QFontMetrics(font)
         text_width = metrics.horizontalAdvance(self.text())
-        width = max(base.width(), text_width + h_padding * 2)
+        extra = 0
+        if not self.icon().isNull() and self.text():
+            extra = self.iconSize().width() + 6
+        width = max(base.width(), text_width + h_padding * 2 + extra)
         return QSize(width, self._fixed_height)
 
     def minimumSizeHint(self) -> QSize:
@@ -239,37 +242,42 @@ class MaterialButton(QPushButton):
             painter.setClipping(False)
             painter.setOpacity(opacity)
             icon = self.icon()
-            if self._icon_mode and (not icon.isNull()):
+            has_icon = not icon.isNull()
+            has_text = bool(self.text())
+            font = self.font()
+            font.setWeight(QFont.Medium)
+            if self._icon_mode:
+                h_padding = 0
+                if height >= 48:
+                    font_size = 24
+                elif height >= 40:
+                    font_size = 20
+                elif height >= 32:
+                    font_size = 16
+                else:
+                    font_size = 12
+            elif height >= 40:
+                font_size = 14
+                h_padding = 12
+            elif height >= 32:
+                font_size = 12
+                h_padding = 10
+            else:
+                font_size = 10
+                h_padding = 8
+            font.setPixelSize(font_size)
+            painter.setFont(font)
+
+            if self._icon_mode and has_icon:
                 pixmap = icon.pixmap(self.iconSize())
                 if not pixmap.isNull():
                     pixmap_rect = pixmap.rect()
                     pixmap_rect.moveCenter(self.rect().center())
                     painter.drawPixmap(pixmap_rect, pixmap)
-            else:
+            elif has_icon and has_text:
+                self._draw_icon_and_text(painter, icon, text_color, font, height, h_padding)
+            elif has_text:
                 painter.setPen(QColor(text_color))
-                font = self.font()
-                font.setWeight(QFont.Medium)
-                if self._icon_mode:
-                    h_padding = 0
-                    if height >= 48:
-                        font_size = 24
-                    elif height >= 40:
-                        font_size = 20
-                    elif height >= 32:
-                        font_size = 16
-                    else:
-                        font_size = 12
-                elif height >= 40:
-                    font_size = 14
-                    h_padding = 12
-                elif height >= 32:
-                    font_size = 12
-                    h_padding = 10
-                else:
-                    font_size = 10
-                    h_padding = 8
-                font.setPixelSize(font_size)
-                painter.setFont(font)
                 text_rect = self.rect().adjusted(h_padding, 0, -h_padding, 0)
                 painter.drawText(text_rect, Qt.AlignCenter | Qt.AlignVCenter, self.text())
 
@@ -326,6 +334,68 @@ class MaterialButton(QPushButton):
     def _get_border_color(self) -> str:
         """获取边框颜色"""
         return mix('#FFFFFF', self._accent_color, 0.3)
+
+    def _draw_icon_and_text(self, painter, icon, text_color, font, height, h_padding):
+        """绘制图标与文字并排的按钮内容。
+
+        图标居左，文字紧随其后，整体在按钮中水平居中。水波纹覆盖区域会
+        以白色重绘图标和文字。
+
+        Args:
+            painter: 当前 QPainter。
+            icon: 按钮图标。
+            text_color: 文字颜色。
+            font: 当前使用的字体。
+            height: 按钮高度。
+            h_padding: 水平内边距。
+        """
+        from PyQt5.QtGui import QFontMetrics
+
+        pixmap = icon.pixmap(self.iconSize())
+        if pixmap.isNull():
+            painter.setPen(QColor(text_color))
+            text_rect = self.rect().adjusted(h_padding, 0, -h_padding, 0)
+            painter.drawText(text_rect, Qt.AlignCenter | Qt.AlignVCenter, self.text())
+            return
+
+        metrics = QFontMetrics(font)
+        text_width = metrics.horizontalAdvance(self.text())
+        icon_size = pixmap.rect().size()
+        spacing = 6
+        total_width = icon_size.width() + spacing + text_width
+        start_x = (self.width() - total_width) // 2
+        icon_y = (height - icon_size.height()) // 2
+
+        pixmap_rect = pixmap.rect()
+        pixmap_rect.moveTopLeft(QPoint(start_x, icon_y))
+        painter.drawPixmap(pixmap_rect, pixmap)
+
+        painter.setPen(QColor(text_color))
+        text_rect = QRect(
+            start_x + icon_size.width() + spacing,
+            0,
+            text_width,
+            height,
+        )
+        painter.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, self.text())
+
+        if not self._ripples:
+            return
+
+        for ripple in self._ripples:
+            if ripple.alpha <= 0 or ripple.radius <= 0:
+                continue
+            painter.save()
+            clip = QPainterPath()
+            clip.addEllipse(ripple.center, ripple.radius, ripple.radius)
+            painter.setClipPath(clip)
+
+            white_pen = QPen(QColor("#FFFFFF"))
+            white_pen.setWidth(0)
+            painter.setPen(white_pen)
+            painter.drawPixmap(pixmap_rect, pixmap)
+            painter.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, self.text())
+            painter.restore()
 
     def mousePressEvent(self, event: QMouseEvent):
         """鼠标按下事件"""

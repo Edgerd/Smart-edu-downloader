@@ -114,7 +114,9 @@
             "title": "(＃°Д°) 贊助作者",
             "message": "若覺合用，請作者一飲如何？ (≧▽≦)",
             "qr_missing": "贊賞碼圖未見",
-            "scan_tip": "掃碼贊賞，感謝支持"
+            "scan_tip": "掃碼贊賞，感謝支持",
+            "afdian_button": "啟愛發電",
+            "afdian_desc": "亦可於愛發電恆助作者開發"
         },
         "download_dir": {
             "title": "選下載之處",
@@ -181,6 +183,8 @@
         "support_author_message": "若此項目有益於君，歡迎贊助作者！🙏",
         "donate_button": "💝 贊助",
         "bilibili_button": "📺 B站",
+        "afdian_button": "愛發電",
+        "afdian_desc": "於愛發電恆助作者",
         "confirm_clear_history": "確清空所有歷史記錄乎？",
         "log_file_not_exist": "日誌檔不存在",
         "history_cleared": "歷史已清！",
@@ -768,6 +772,7 @@
             "view_log": "查看日誌 — 打開日誌文件查看程序運行日誌",
             "donation": "贊助支持 — 支持作者開發",
             "bilibili": "B站主頁 — 訪問作者B站主頁",
+            "afdian": "愛發電 — 於愛發電贊助作者",
             "download_history_table": "下載歷史記錄表格 — 查看最近下載記錄",
             "link_history_table": "連結處理歷史表格 — 查看連結處理記錄",
             "search_history_table": "搜索歷史表格 — 查看資源庫搜索記錄"
@@ -1077,9 +1082,9 @@
         },
         "license": {
             "title": "許可條款",
-            "subtitle": "請閱讀並同意隱私政策以繼續使用",
-            "agree_privacy_policy": "我已閱讀並同意《{privacy_policy}》",
-            "privacy_policy": "隱私政策",
+            "subtitle": "請閱讀並同意用戶協議以繼續使用",
+            "agree_user_agreement": "我已閱讀並同意《{user_agreement}》",
+            "user_agreement": "用戶協議",
             "next_tip": "下一步",
             "anti_fraud_title": "防詐騙提醒",
             "anti_fraud_content": "本軟體完全免費，官方不提供任何付費支援服務。源作者B站首頁：{link}。如透過付費方式取得本應用，請優先向賣家求助。",
@@ -1143,8 +1148,8 @@
             "description": "已備妥開始下載課本矣！",
             "finish_tip": "完成"
         },
-        "privacy_policy": {
-            "title": "隱私政策",
+        "user_agreement": {
+            "title": "用戶協議",
             "effective_date": "生效日期",
             "close": "闔"
         },

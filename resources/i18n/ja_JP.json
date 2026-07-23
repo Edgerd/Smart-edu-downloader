@@ -114,7 +114,9 @@
             "title": "(＃°Д°) 作者を支援",
             "message": "気に入ったら、作者に飲み物をおごってあげて！ (≧▽≦)",
             "qr_missing": "支援用QRコードが見つかりません",
-            "scan_tip": "QRコードをスキャンして作者を支援してください"
+            "scan_tip": "QRコードをスキャンして作者を支援してください",
+            "afdian_button": "愛発電を開く",
+            "afdian_desc": "愛発電で作者を長期支援することもできます"
         },
         "download_dir": {
             "title": "ダウンロード先を選択",
@@ -181,6 +183,8 @@
         "support_author_message": "役に立ったら、作者を応援してください！🙏",
         "donate_button": "💝 支援する",
         "bilibili_button": "📺 Bilibili",
+        "afdian_button": "愛発電",
+        "afdian_desc": "愛発電で作者を支援",
         "confirm_clear_history": "すべての履歴を消去しますか？",
         "log_file_not_exist": "ログファイルが見つかりません",
         "history_cleared": "履歴を消去しました！",
@@ -768,6 +772,7 @@
             "view_log": "ログを表示 — ログファイルを開く",
             "donation": "作者を支援 — 開発をサポート",
             "bilibili": "Bilibili — 作者のページを訪問",
+            "afdian": "愛発電 — 愛発電で作者を支援",
             "download_history_table": "ダウンロード履歴 — 最近のダウンロード",
             "link_history_table": "リンク処理履歴 — 処理済みリンク",
             "search_history_table": "検索履歴 — リソースライブラリの検索記録"
@@ -1077,9 +1082,9 @@
         },
         "license": {
             "title": "ライセンス条項",
-            "subtitle": "続行するにはプライバシーポリシーに同意してください",
-            "agree_privacy_policy": "《{privacy_policy}》を読み、同意しました",
-            "privacy_policy": "プライバシーポリシー",
+            "subtitle": "続行するにはユーザー協議に同意してください",
+            "agree_user_agreement": "《{user_agreement}》を読み、同意しました",
+            "user_agreement": "ユーザー協議",
             "next_tip": "次へ",
             "anti_fraud_title": "詐欺防止のお知らせ",
             "anti_fraud_content": "本ソフトは完全無料で、公式は有料サポートを提供していません。原作者のBilibiliホームページ：{link}。有料で入手した場合は、まず販売者に問い合わせてください。",
@@ -1143,8 +1148,8 @@
             "description": "教科書のダウンロードを始める準備ができました！",
             "finish_tip": "完了"
         },
-        "privacy_policy": {
-            "title": "プライバシーポリシー",
+        "user_agreement": {
+            "title": "ユーザー協議",
             "effective_date": "発効日",
             "close": "閉じる"
         },
