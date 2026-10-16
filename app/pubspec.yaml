@@ -1,0 +1,20 @@
+name: smart_edu_downloader
+description: Smart-edu-downloader 2.0 — Rust + Flutter 重构版
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ffi: ^2.2.0
+  shared_preferences: ^2.3.0
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

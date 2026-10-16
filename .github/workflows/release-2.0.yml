@@ -1,0 +1,130 @@
+name: Build & Release (2.0)
+
+on:
+  push:
+    branches: ["2.0"]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build Rust core
+        run: cargo build --release
+        working-directory: rust-core
+      - name: Flutter pub get
+        run: flutter pub get
+        working-directory: app
+      - name: Analyze
+        run: flutter analyze
+        working-directory: app
+      - name: Build Flutter (Windows)
+        run: flutter build windows --release
+        working-directory: app
+      - name: Package
+        shell: pwsh
+        run: |
+          Copy-Item rust-core/target/release/sed_core.dll app/build/windows/x64/runner/Release/
+          Compress-Archive -Path app/build/windows/x64/runner/Release/* -DestinationPath SED-2.0.0-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: SED-2.0.0-windows-x64.zip
+
+  linux:
+    name: Linux
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev clang cmake pkg-config
+      - name: Build Rust core
+        run: cargo build --release
+        working-directory: rust-core
+      - name: Flutter pub get
+        run: flutter pub get
+        working-directory: app
+      - name: Analyze
+        run: flutter analyze
+        working-directory: app
+      - name: Build Flutter (Linux)
+        run: flutter build linux --release
+        working-directory: app
+      - name: Package
+        run: |
+          cp rust-core/target/release/libsed_core.so app/build/linux/x64/release/bundle/lib/
+          tar -C app/build/linux/x64/release/bundle -czf SED-2.0.0-linux-x64.tar.gz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: SED-2.0.0-linux-x64.tar.gz
+
+  android:
+    name: Android (arm64)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --locked
+      - name: Build Rust core (android arm64)
+        run: cargo ndk -t arm64-v8a -o ../app/android/app/src/main/jniLibs build --release
+        working-directory: rust-core
+      - name: Flutter pub get
+        run: flutter pub get
+        working-directory: app
+      - name: Build APK
+        run: flutter build apk --release
+        working-directory: app
+      - name: Package
+        run: |
+          cp app/build/app/outputs/flutter-apk/app-release.apk SED-2.0.0-android-arm64.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: SED-2.0.0-android-arm64.apk
+
+  release:
+    name: Release v1.0.0
+    needs: [windows, linux, android]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: dist
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "2.0 重构版 v1.0.0"
+          body_path: RELEASE_NOTES.md
+          files: dist/*
+          fail_on_unmatched_files: true

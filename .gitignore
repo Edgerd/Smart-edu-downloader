@@ -38,3 +38,11 @@ settings.json
 # 测试临时文件
 .dev/test/*.log
 .dev/test/__pycache__/
+
+# Flutter / Rust 2.0
+app/.dart_tool/
+app/build/
+app/.flutter-plugins*
+app/pubspec.lock
+rust-core/target/
+*.so
