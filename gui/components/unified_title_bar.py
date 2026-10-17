@@ -49,6 +49,7 @@ class UnifiedTitleBar(QWidget):
         mode: str = "large",
         custom_title_text: str = "",
         title_font_styles: list = None,
+        include_nav: bool = True,
         parent=None,
     ):
         """初始化统一标题栏。
@@ -57,11 +58,13 @@ class UnifiedTitleBar(QWidget):
             mode: 显示模式，"large"、"compact" 或 "icon_only"。
             custom_title_text: 自定义标题文本；为空时按模式显示默认标题。
             title_font_styles: 标题字体样式列表，可包含 "bold"、"italic"。
+            include_nav: 是否在标题栏内集成导航按钮（导航移至左侧边栏时为 False）。
             parent: 父组件。
         """
         super().__init__(parent)
 
         self._mode = mode if mode in ("large", "compact", "icon_only") else "large"
+        self._include_nav = bool(include_nav)
         self._custom_title_text = custom_title_text or ""
         self._title_font_styles = list(title_font_styles or [])
         self._accent_color = load_primary_color()
@@ -138,7 +141,7 @@ class UnifiedTitleBar(QWidget):
 
     def _build_large(self):
         """构建 large 模式：标题栏与导航栏上下组合。"""
-        self.setFixedHeight(105)
+        self.setFixedHeight(105 if self._include_nav else 50)
         self._nav_style_radius = 20
         self._nav_style_font_size = 11
 
@@ -150,8 +153,9 @@ class UnifiedTitleBar(QWidget):
         title_row = self._create_title_row(height=50, left_margin=20, right_margin=10)
         main_layout.addWidget(title_row)
 
-        nav_row = self._create_nav_row(height=55, left_margin=20, right_margin=20)
-        main_layout.addWidget(nav_row)
+        if self._include_nav:
+            nav_row = self._create_nav_row(height=55, left_margin=20, right_margin=20)
+            main_layout.addWidget(nav_row)
 
     def _build_compact(self):
         """构建 compact 模式：标题、导航按钮、窗口控制按钮合并为单行。"""
@@ -167,9 +171,12 @@ class UnifiedTitleBar(QWidget):
         title_widget = self._create_title_widget(icon_size=22)
         main_layout.addWidget(title_widget)
 
-        nav_container = self._create_compact_nav_container()
-        nav_container.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        main_layout.addWidget(nav_container, 1)
+        if self._include_nav:
+            nav_container = self._create_compact_nav_container()
+            nav_container.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+            main_layout.addWidget(nav_container, 1)
+        else:
+            main_layout.addStretch(1)
 
         controls = self._create_control_buttons(icon_size=16, button_size=32)
         for btn in controls:
@@ -188,9 +195,12 @@ class UnifiedTitleBar(QWidget):
         title_widget = self._create_title_widget(icon_size=22)
         main_layout.addWidget(title_widget)
 
-        nav_container = self._create_icon_only_nav_container()
-        nav_container.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        main_layout.addWidget(nav_container, 1)
+        if self._include_nav:
+            nav_container = self._create_icon_only_nav_container()
+            nav_container.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+            main_layout.addWidget(nav_container, 1)
+        else:
+            main_layout.addStretch(1)
 
         controls = self._create_control_buttons(icon_size=16, button_size=32)
         for btn in controls:

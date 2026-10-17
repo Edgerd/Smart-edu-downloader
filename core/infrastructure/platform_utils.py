@@ -235,15 +235,40 @@ def sanitize_filename(filename: str, max_length: int = 100) -> str:
     return filename
 
 
+# 各平台 UI 字体回退链：内置 HarmonyOS Sans 加载失败时依次尝试
+UI_FONT_FALLBACKS = {
+    "windows": ["HarmonyOS Sans SC", "Microsoft YaHei", "微软雅黑", "PingFang SC", "Noto Sans CJK SC"],
+    "darwin": ["HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC"],
+    "linux": ["HarmonyOS Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "PingFang SC"],
+}
+
+MONO_FONT_FALLBACKS = {
+    "windows": ["Cascadia Mono", "Consolas", "Microsoft YaHei Mono", "Menlo", "DejaVu Sans Mono"],
+    "darwin": ["Menlo", "Monaco", "Cascadia Mono", "DejaVu Sans Mono"],
+    "linux": ["DejaVu Sans Mono", "Noto Sans Mono CJK SC", "Cascadia Mono", "Consolas"],
+}
+
+
 def get_default_ui_font_family() -> str:
     """获取跨平台默认 UI 字体族名称。
 
-    当项目内置字体加载失败时，用于兜底显示。
+    当项目内置字体加载失败时，用于兜底显示。按平台回退链逐一检测
+    系统中实际可用的字体，优先使用微软雅黑/鸿蒙等现代中文字体。
 
     Returns:
         str: 适合当前平台的默认无衬线字体名称。
     """
     system = get_platform()
+    candidates = UI_FONT_FALLBACKS.get(system, UI_FONT_FALLBACKS["linux"])
+    try:
+        from PyQt5.QtGui import QFontDatabase
+        available = set(QFontDatabase.families())
+        for family in candidates:
+            if family in available:
+                return family
+    except Exception:
+        pass
+    # 无 Qt 环境或检测失败时返回链首的通用字体
     if system == "windows":
         return "Microsoft YaHei"
     if system == "darwin":
@@ -254,10 +279,21 @@ def get_default_ui_font_family() -> str:
 def get_default_monospace_font_family() -> str:
     """获取跨平台默认等宽字体族名称。
 
+    按平台回退链逐一检测系统中实际可用的字体。
+
     Returns:
         str: 适合当前平台的默认等宽字体名称。
     """
     system = get_platform()
+    candidates = MONO_FONT_FALLBACKS.get(system, MONO_FONT_FALLBACKS["linux"])
+    try:
+        from PyQt5.QtGui import QFontDatabase
+        available = set(QFontDatabase.families())
+        for family in candidates:
+            if family in available:
+                return family
+    except Exception:
+        pass
     if system == "windows":
         return "Consolas"
     if system == "darwin":

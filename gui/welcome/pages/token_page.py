@@ -149,13 +149,14 @@ class TokenPage(BaseWelcomePage):
         self.set_nav_buttons(self.prev_btn, self.next_btn)
 
     def _build_tutorial_text(self) -> str:
-        """组装 5 步教程文本。"""
+        """组装完整教程文本（含先输入 allow pasting 的引导）。"""
         steps = [
             _("welcome_onboarding.access_token.tutorial_step_1"),
             _("welcome_onboarding.access_token.tutorial_step_2"),
             _("welcome_onboarding.access_token.tutorial_step_3"),
             _("welcome_onboarding.access_token.tutorial_step_4"),
             _("welcome_onboarding.access_token.tutorial_step_5"),
+            _("welcome_onboarding.access_token.tutorial_step_6"),
         ]
         return "\n".join(steps)
 
@@ -164,7 +165,7 @@ class TokenPage(BaseWelcomePage):
         webbrowser.open("https://www.zxx.edu.cn/")
 
     def _on_copy_code(self) -> None:
-        """复制 JS 代码片段到剪贴板并显示提示。"""
+        """复制 JS 代码片段到剪贴板并提示先输入 allow pasting。"""
         clipboard = QGuiApplication.clipboard()
         clipboard.setText(_("settings.privacy.token_js_code_snippet"))
 
@@ -172,6 +173,15 @@ class TokenPage(BaseWelcomePage):
         self.copy_code_btn.setText(_("welcome_onboarding.access_token.copy_success"))
         self.copy_code_btn.setEnabled(False)
         QTimer.singleShot(2000, lambda: self._restore_copy_button(original_text))
+
+        # 提示用户在控制台先输入 allow pasting 允许粘贴
+        try:
+            self.tip_label.setText(
+                _("welcome_onboarding.access_token.copy_success_with_allow_pasting")
+            )
+            self.tip_label.setVisible(True)
+        except RuntimeError:
+            pass
 
     def _restore_copy_button(self, text: str) -> None:
         """恢复复制按钮的原始文本和状态。"""

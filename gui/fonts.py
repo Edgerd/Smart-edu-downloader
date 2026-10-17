@@ -7,7 +7,14 @@ from PyQt5.QtGui import QFont, QFontDatabase
 from core.infrastructure.platform_utils import (
     get_default_ui_font_family,
     get_default_monospace_font_family,
+    UI_FONT_FALLBACKS,
+    get_platform,
 )
+
+
+def get_platform_ui_font_fallbacks() -> list:
+    """获取当前平台的 UI 字体回退族列表。"""
+    return list(UI_FONT_FALLBACKS.get(get_platform(), UI_FONT_FALLBACKS["linux"]))
 
 # 字体路径
 # gui/fonts.py -> 上1级=项目根目录 -> 但实际字体在 resources/fonts/ 所以需要上2级
@@ -64,6 +71,24 @@ def _load_fonts():
         if os.path.exists(font_path):
             QFontDatabase.addApplicationFont(font_path)
 
+def _ui_fallback_families():
+    """构建 UI 字体回退族列表（鸿蒙优先，其次微软雅黑等）。"""
+    families = []
+    if _harmonyos_family:
+        families.append(_harmonyos_family)
+    for family in get_platform_ui_font_fallbacks():
+        if family not in families:
+            families.append(family)
+    return families or ["Microsoft YaHei", "HarmonyOS Sans SC"]
+
+def _apply_font_families(font: QFont) -> QFont:
+    """为字体设置回退族（Qt >= 5.13 支持 setFamilies）。"""
+    try:
+        font.setFamilies(_ui_fallback_families())
+    except AttributeError:
+        pass
+    return font
+
 def get_harmonyos_family():
     """获取 HarmonyOS 字体族名称"""
     if _harmonyos_family is None:
@@ -78,45 +103,49 @@ def get_pixel_family():
 
 def title_font():
     """获取标题字体"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_TITLE, QFont.Bold)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_TITLE, QFont.Bold))
 
 def nav_font():
     """获取导航栏字体"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_NAV, QFont.Medium)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_NAV, QFont.Medium))
 
 def subtitle_font():
     """获取副标题字体"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_SUBTITLE, QFont.Medium)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_SUBTITLE, QFont.Medium))
 
 def body_font():
     """获取正文字体"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_BODY)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_BODY))
 
 def small_font():
     """获取小字体"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_SMALL)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_SMALL))
 
 def bold_font():
     """获取粗体字"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_BODY, QFont.Bold)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_BODY, QFont.Bold))
 
 def monospace_font():
     """获取等宽字体（用于日志/控制台）"""
-    font = QFont(get_pixel_family(), FONT_SIZE_MONOSPACE)
-    return font
+    return _apply_font_families(QFont(get_pixel_family(), FONT_SIZE_MONOSPACE))
 
 def large_font():
     """获取大字体（用于统计数字等）"""
-    font = QFont(get_harmonyos_family(), FONT_SIZE_LARGE, QFont.Bold)
-    return font
+    return _apply_font_families(QFont(get_harmonyos_family(), FONT_SIZE_LARGE, QFont.Bold))
 
 # 延迟初始化 - 由调用方在 Qt 应用程序初始化后调用
 def init_fonts():
     """初始化加载字体（应在 Qt 应用程序初始化后调用）"""
+    global _harmonyos_family
     _load_fonts()
+    # 设置全局默认字体，覆盖未显式指定字体的界面
+    try:
+        from PyQt5.QtWidgets import QApplication
+        app = QApplication.instance()
+        if app is not None:
+            default_font = _apply_font_families(
+                QFont(get_harmonyos_family(), FONT_SIZE_BODY)
+            )
+            app.setFont(default_font)
+    except Exception:
+        pass

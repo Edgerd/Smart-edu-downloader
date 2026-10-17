@@ -206,19 +206,22 @@ class NavBar(QWidget):
     # 颜色定义
     COLOR_INACTIVE = "#FFFFFF"  # 非激活状态 - 白色
 
-    def __init__(self, add_nav_hover_effect_fn=None, add_hover_tooltip_fn=None, radius: int = 20, parent=None):
+    def __init__(self, add_nav_hover_effect_fn=None, add_hover_tooltip_fn=None, radius: int = 20,
+                 orientation: str = "horizontal", parent=None):
         """初始化导航栏
 
         Args:
             add_nav_hover_effect_fn: 外部传入的导航悬停动画函数
             add_hover_tooltip_fn: 外部传入的悬停提示函数
             radius: 导航按钮圆角半径
+            orientation: 布局方向，"horizontal"（横向底栏）或 "vertical"（左侧边栏）
             parent: 父组件
         """
         super().__init__(parent)
         self._add_nav_hover_effect = add_nav_hover_effect_fn
         self._add_hover_tooltip = add_hover_tooltip_fn
         self._button_radius = radius
+        self._orientation = orientation if orientation in ("horizontal", "vertical") else "horizontal"
 
         # 从设置读取主题色
         self._accent_color = load_primary_color()
@@ -228,9 +231,13 @@ class NavBar(QWidget):
         app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         self.icon_manager = IconManager(app_root)
 
-        self.setFixedHeight(55)
-        self.setObjectName("navBar")
-        self.setAttribute(Qt.WA_StyledBackground, True)
+        if self._orientation == "vertical":
+            self.setObjectName("navBar")
+            self.setAttribute(Qt.WA_StyledBackground, True)
+        else:
+            self.setFixedHeight(55)
+            self.setObjectName("navBar")
+            self.setAttribute(Qt.WA_StyledBackground, True)
 
         # 设置初始默认背景，避免启动瞬间透明；主窗口后续会覆盖为渐变主题色。
         default_bg = load_primary_color()
@@ -246,13 +253,23 @@ class NavBar(QWidget):
 
         self._create_layout()
         self._create_nav_buttons()
-    
+
+        if self._orientation == "vertical":
+            self.setFixedWidth(self._compute_sidebar_width())
+
     def _create_layout(self):
         """创建导航栏布局"""
-        self.nav_layout = QHBoxLayout()
-        self.nav_layout.setContentsMargins(20, 0, 20, 0)
-        self.nav_layout.setSpacing(15)
-        self.setLayout(self.nav_layout)
+        if self._orientation == "vertical":
+            # 左侧边栏：垂直排列按钮
+            self.nav_layout = QVBoxLayout()
+            self.nav_layout.setContentsMargins(10, 12, 10, 12)
+            self.nav_layout.setSpacing(8)
+            self.setLayout(self.nav_layout)
+        else:
+            self.nav_layout = QHBoxLayout()
+            self.nav_layout.setContentsMargins(20, 0, 20, 0)
+            self.nav_layout.setSpacing(15)
+            self.setLayout(self.nav_layout)
     
     def _load_svg_icon(self, icon_name, color, size=(30, 30)):
         """加载 SVG 图标并着色"""
@@ -276,6 +293,77 @@ class NavBar(QWidget):
         
         self.nav_layout.addStretch()
     
+    def _create_vertical_nav_button(self, index, config):
+        """创建左侧边栏模式的导航按钮（图标在上、文字在下）
+
+        Args:
+            index: 按钮索引
+            config: 按钮配置字典
+
+        Returns:
+            QPushButton: 导航按钮实例
+        """
+        from gui.fonts import nav_font
+
+        btn = NavButton(active_color=self._accent_color, radius=self._button_radius)
+        btn.setFixedHeight(52)
+        btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        btn.setObjectName(f"navBtn_{index}")
+        btn.setProperty("active", index == 0)
+
+        # 主页按钮初始即为激活状态，避免启动时视觉闪烁
+        if index == 0:
+            btn._is_active = True
+            btn._active_progress = 1.0
+
+        btn_layout = QVBoxLayout()
+        btn_layout.setContentsMargins(4, 7, 4, 7)
+        btn_layout.setSpacing(4)
+        btn_layout.setAlignment(Qt.AlignCenter)
+
+        icon_size = 26
+        icon_color = self._accent_color if index == 0 else self.COLOR_INACTIVE
+        icon_pixmap = self._load_svg_icon(config['icon_file'], icon_color, size=(icon_size, icon_size))
+
+        icon_label = QLabel()
+        icon_label.setFixedSize(icon_size, icon_size)
+        icon_label.setAlignment(Qt.AlignCenter)
+        icon_label.setObjectName(f"navIcon_{index}")
+        icon_label.setAttribute(Qt.WA_TransparentForMouseEvents)
+        if icon_pixmap and not icon_pixmap.isNull():
+            icon_label.setPixmap(icon_pixmap)
+        btn_layout.addWidget(icon_label, 0, Qt.AlignHCenter)
+        self.nav_icon_labels.append(icon_label)
+
+        name_label = QLabel(config['name'])
+        name_label.setAlignment(Qt.AlignCenter)
+        name_label.setObjectName(f"navText_{index}")
+        name_label.setProperty("active", index == 0)
+        name_label.setAttribute(Qt.WA_TransparentForMouseEvents)
+        name_label.setWordWrap(False)
+        name_label.setToolTip(config['tip'])
+
+        font = nav_font()
+        font.setPointSize(10)
+        name_label.setFont(font)
+        btn_layout.addWidget(name_label, 0, Qt.AlignHCenter)
+
+        btn.setLayout(btn_layout)
+        btn.setStyleSheet(self._get_nav_button_style())
+        return btn
+
+    def _compute_sidebar_width(self):
+        """根据按钮文字宽度计算侧边栏固定宽度"""
+        from gui.fonts import nav_font
+        font = nav_font()
+        font.setPointSize(10)
+        metrics = QFontMetrics(font)
+        max_text_width = max(
+            metrics.horizontalAdvance(config['name']) for config in self.NAV_CONFIG
+        )
+        # 左右边距(10*2) + 按钮内边距(4*2) + 文字宽度 + 余量
+        return max(88, max_text_width + 48)
+
     def _create_nav_button(self, index, config):
         """创建单个导航按钮
 
@@ -286,6 +374,9 @@ class NavBar(QWidget):
         Returns:
             QPushButton: 导航按钮实例
         """
+        if self._orientation == "vertical":
+            return self._create_vertical_nav_button(index, config)
+
         btn = NavButton(active_color=self._accent_color, radius=self._button_radius)
         btn.setFixedHeight(40)
         btn.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)

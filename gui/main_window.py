@@ -348,8 +348,7 @@ class MainWindow(QMainWindow):
         self._main_layout.addWidget(self._content_container)
 
         self._create_title_bar_area(container_layout)
-        self._create_content_area(container_layout)
-        self._create_status_bar_component(container_layout)
+        self._create_body_area(container_layout)
 
         self._content_container.setStyleSheet("""
             #contentContainer {
@@ -361,6 +360,53 @@ class MainWindow(QMainWindow):
         self._apply_styles()
 
         self._update_corner_styles()
+
+    def _create_body_area(self, parent_layout):
+        """创建主体区域：左侧导航侧边栏 + 右侧内容区（内容 + 状态栏）。
+
+        Args:
+            parent_layout: 内容容器布局。
+        """
+        body_layout = QHBoxLayout()
+        body_layout.setContentsMargins(0, 0, 0, 0)
+        body_layout.setSpacing(0)
+        self._body_layout = body_layout
+
+        # 左侧导航侧边栏
+        self._create_nav_sidebar_component(body_layout)
+
+        # 右侧列：内容区 + 状态栏
+        right_layout = QVBoxLayout()
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(0)
+        self._right_layout = right_layout
+
+        body_layout.addLayout(right_layout, 1)
+
+        self._create_content_area(right_layout)
+        self._create_status_bar_component(right_layout)
+
+        parent_layout.addLayout(body_layout, 1)
+
+    def _create_nav_sidebar_component(self, parent_layout):
+        """创建左侧导航侧边栏组件（垂直导航栏）。
+
+        Args:
+            parent_layout: 主体区域布局。
+        """
+        from gui.components.nav_bar import NavBar
+
+        self.nav_bar = NavBar(
+            add_nav_hover_effect_fn=self.animation_manager.add_nav_hover_effect,
+            add_hover_tooltip_fn=self._add_hover_tooltip,
+            orientation="vertical",
+        )
+
+        self.nav_bar.page_switch_requested.connect(self.navigation_manager.switch_page)
+        self.nav_buttons = self.nav_bar.nav_buttons
+
+        # 侧边栏始终位于主体区域最左侧
+        parent_layout.insertWidget(0, self.nav_bar)
     
     def _get_title_bar_style(self):
         """从设置中读取标题栏样式。
@@ -389,13 +435,12 @@ class MainWindow(QMainWindow):
             self._create_large_title_bar_component(parent_layout)
 
     def _create_large_title_bar_component(self, parent_layout):
-        """创建大号分离式标题栏组件（标题栏 + 导航栏）。
+        """创建大号标题栏组件（导航已移至左侧边栏）。
 
         Args:
             parent_layout: 内容容器布局。
         """
         self._create_title_bar_component(parent_layout)
-        self._create_navigation_bar_component(parent_layout)
 
     def _create_compact_title_bar_component(self, parent_layout):
         """创建精简合并式标题栏组件。
@@ -414,6 +459,7 @@ class MainWindow(QMainWindow):
             mode="compact",
             custom_title_text=custom_title,
             title_font_styles=font_styles,
+            include_nav=False,
         )
         self.unified_title_bar.minimize_requested.connect(self.showMinimized)
         self.unified_title_bar.maximize_requested.connect(self._toggle_maximize)
@@ -423,8 +469,7 @@ class MainWindow(QMainWindow):
         )
 
         self.title_bar = self.unified_title_bar
-        self.nav_bar = self.unified_title_bar
-        self.nav_buttons = self.unified_title_bar._nav_buttons
+        self.nav_buttons = []
 
         parent_layout.addWidget(self.unified_title_bar)
 
@@ -445,6 +490,7 @@ class MainWindow(QMainWindow):
             mode="icon_only",
             custom_title_text=custom_title,
             title_font_styles=font_styles,
+            include_nav=False,
         )
         self.unified_title_bar.minimize_requested.connect(self.showMinimized)
         self.unified_title_bar.maximize_requested.connect(self._toggle_maximize)
@@ -454,8 +500,7 @@ class MainWindow(QMainWindow):
         )
 
         self.title_bar = self.unified_title_bar
-        self.nav_bar = self.unified_title_bar
-        self.nav_buttons = self.unified_title_bar._nav_buttons
+        self.nav_buttons = []
 
         parent_layout.addWidget(self.unified_title_bar)
 
@@ -517,17 +562,25 @@ class MainWindow(QMainWindow):
         self.nav_buttons = []
 
     def rebuild_title_bar(self):
-        """根据当前标题栏样式设置重建标题栏组件。"""
+        """根据当前标题栏样式设置重建标题栏组件（含左侧导航侧边栏）。"""
         if not hasattr(self, '_content_container'):
             return
 
         container_layout = self._content_container.layout()
+        body_layout = getattr(self, '_body_layout', None)
+        right_layout = getattr(self, '_right_layout', None)
+        if body_layout is None or right_layout is None:
+            return
 
         content_area = self.stacked_widget
         status_bar = self.status_bar
-        container_layout.removeWidget(content_area)
-        container_layout.removeWidget(status_bar)
+        right_layout.removeWidget(content_area)
+        right_layout.removeWidget(status_bar)
 
+        # 先从主体布局移除旧侧边栏，再销毁标题栏相关组件
+        old_nav = getattr(self, 'nav_bar', None)
+        if old_nav is not None:
+            body_layout.removeWidget(old_nav)
         self._destroy_title_bar_components(container_layout)
 
         if self._title_bar_style == "compact":
@@ -537,8 +590,11 @@ class MainWindow(QMainWindow):
         else:
             self._create_large_title_bar_component(container_layout)
 
-        container_layout.addWidget(content_area, 1)
-        container_layout.addWidget(status_bar)
+        # 重建左侧导航侧边栏
+        self._create_nav_sidebar_component(body_layout)
+
+        right_layout.addWidget(content_area, 1)
+        right_layout.addWidget(status_bar)
 
         current_index = self.navigation_manager.get_current_index()
         if hasattr(self.nav_bar, 'set_active_button'):
@@ -940,7 +996,10 @@ class MainWindow(QMainWindow):
             log("ERROR", f"设置窗口阴影失败: {e}")
 
     def _update_corner_styles(self):
-        """更新圆角样式（使用主题背景色）"""
+        """更新圆角样式（使用主题背景色）。
+
+        左侧为导航侧边栏，因此右列内容区/状态栏仅需处理右下角圆角。
+        """
         if not hasattr(self, 'stacked_widget') or not hasattr(self, 'status_bar'):
             return
 
@@ -963,7 +1022,7 @@ class MainWindow(QMainWindow):
             self.status_bar.setStyleSheet(f"""
                 #statusBar {{
                     background: {bg};
-                    border-bottom-left-radius: {radius}px;
+                    border-bottom-left-radius: 0px;
                     border-bottom-right-radius: {radius}px;
                 }}
             """)
@@ -971,7 +1030,7 @@ class MainWindow(QMainWindow):
             self.stacked_widget.setStyleSheet(f"""
                 #contentArea {{
                     background: {bg};
-                    border-bottom-left-radius: {radius}px;
+                    border-bottom-left-radius: 0px;
                     border-bottom-right-radius: {radius}px;
                 }}
             """)
