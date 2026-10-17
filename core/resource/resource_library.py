@@ -313,7 +313,10 @@ class ResourceLibrary:
         self._resource_fetcher.update_access_token()
 
     def search_resources(self, keyword: str):
-        """搜索资源 - 委托给搜索服务
+        """搜索资源 - 按原版查询逻辑实现
+
+        将层级资源树扁平化后，用关键词对 标题/学科/年级/版本 做包含匹配，
+        结果保持资源树原有顺序，不做模糊纠错与智能修复。
 
         Args:
             keyword: 搜索关键词
@@ -323,10 +326,23 @@ class ResourceLibrary:
         """
         if not self._resource_list:
             self._resource_list = self.fetch_resource_list()
-        return self._search_service.search(keyword, with_stats=False)
+        keyword = (keyword or '').strip().lower()
+        if not keyword:
+            return []
+        results = []
+        for item in self._resource_processor.get_flat_resources():
+            haystack = ' '.join(filter(None, [
+                item.get('title', ''),
+                item.get('subject', ''),
+                item.get('grade', ''),
+                item.get('publisher', ''),
+            ])).lower()
+            if keyword in haystack:
+                results.append(item)
+        return results
 
     def search_resources_with_stats(self, keyword: str):
-        """搜索资源并返回统计信息
+        """搜索资源并返回统计信息（与 search_resources 同源，统计为空占位）
 
         Args:
             keyword: 搜索关键词
@@ -334,9 +350,7 @@ class ResourceLibrary:
         Returns:
             (搜索结果列表, 统计信息字典)
         """
-        if not self._resource_list:
-            self._resource_list = self.fetch_resource_list()
-        return self._search_service.search(keyword, with_stats=True)
+        return self.search_resources(keyword), {}
 
     def get_search_suggestions(self, partial_keyword: str, limit: int=10) -> list:
         """获取搜索建议

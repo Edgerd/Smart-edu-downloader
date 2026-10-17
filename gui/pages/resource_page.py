@@ -513,68 +513,67 @@ class ResourcePage(QWidget, HoverTooltipMixin):
             combo.currentIndexChanged.connect(partial(self._on_combo_changed, i))
 
     def _on_combo_changed(self, index):
-        """下拉菜单选择改变 - 完全按照原版 selection_handler() 逻辑"""
+        """下拉菜单选择改变 - 按原版 selection_handler 逻辑（按数据ID匹配资源树）"""
         if self.event_flag or self.loading:
             return
         self.event_flag = True
         self.cover_widget.clear()
         try:
+            # 沿资源树按当前选中项的ID逐级向下定位节点
             current_hier = self.resource_list
-            end_flag = False
+            current_node = None
             for i in range(index + 1):
-                try:
-                    current_text = self.combo_boxes[i].currentText()
-                    current_id = next((k for k, v in current_hier.items() if v.get('display_name') == current_text), None)
-                    if current_id is None:
-                        end_flag = True
-                        break
-                    current_hier = current_hier[current_id].get('children', {})
-                except (StopIteration, KeyError):
-                    end_flag = True
+                current_id = self.combo_boxes[i].currentData()
+                if not current_id or current_id not in current_hier:
+                    current_node = None
                     break
-            if index < self.combo_count - 1 and (not end_flag):
+                current_node = current_hier[current_id]
+                current_hier = current_node.get('children', {}) or {}
+
+            # 先清空并禁用所有下级下拉框
+            for i in range(index + 1, self.combo_count):
+                combo = self.combo_boxes[i]
+                combo.blockSignals(True)
+                combo.clear()
+                combo.setEnabled(False)
+                combo.blockSignals(False)
+
+            if current_node is None:
+                return
+
+            children = current_node.get('children', {}) or {}
+            if children and index < self.combo_count - 1:
+                # 有子级：填充下一级下拉框
                 next_combo = self.combo_boxes[index + 1]
                 next_combo.blockSignals(True)
                 next_combo.clear()
                 next_combo.addItem(_('resource.category_template', index=index + 1), None)
-                for key, value in current_hier.items():
+                for key, value in children.items():
                     display_name = value.get('display_name', '')
                     if display_name:
                         next_combo.addItem(display_name, key)
                 next_combo.blockSignals(False)
                 next_combo.setEnabled(True)
-                for i in range(index + 2, self.combo_count):
-                    self.combo_boxes[i].setEnabled(False)
-                    self.combo_boxes[i].blockSignals(True)
-                    self.combo_boxes[i].clear()
-                    self.combo_boxes[i].blockSignals(False)
-            if end_flag or not current_hier:
+            elif not children:
+                # 叶子节点：按原版逻辑生成URL
                 self._generate_url_from_selection(index)
-                for i in range(index + 1, self.combo_count):
-                    self.combo_boxes[i].setEnabled(False)
-                    self.combo_boxes[i].blockSignals(True)
-                    self.combo_boxes[i].clear()
-                    self.combo_boxes[i].blockSignals(False)
         finally:
             self.event_flag = False
 
     def _generate_url_from_selection(self, index):
-        """根据选择生成URL - 完全按照原版逻辑"""
+        """根据选择生成URL - 按原版逻辑（按数据ID匹配）"""
         current_hier = self.resource_list
         for i in range(index + 1):
-            try:
-                current_text = self.combo_boxes[i].currentText()
-                current_id = next((k for k, v in current_hier.items() if v.get('display_name') == current_text), None)
-                if current_id is None:
-                    return
-                if i == index:
-                    resource_type = current_hier[current_id].get('resource_type_code') or 'assets_document'
-                    url = f'https://basic.smartedu.cn/tchMaterial/detail?contentType={resource_type}&contentId={current_id}&catalogType=tchMaterial&subCatalog=tchMaterial'
-                    self.url_generated.emit(url)
-                    return
-                current_hier = current_hier[current_id].get('children', {})
-            except (StopIteration, KeyError):
+            current_id = self.combo_boxes[i].currentData()
+            if not current_id or current_id not in current_hier:
                 return
+            node = current_hier[current_id]
+            if i == index:
+                resource_type = node.get('resource_type_code') or 'assets_document'
+                url = f'https://basic.smartedu.cn/tchMaterial/detail?contentType={resource_type}&contentId={current_id}&catalogType=tchMaterial&subCatalog=tchMaterial'
+                self.url_generated.emit(url)
+                return
+            current_hier = node.get('children', {}) or {}
 
     @pyqtSlot(str)
     def _on_url_generated(self, url):
@@ -855,19 +854,12 @@ class ResourcePage(QWidget, HoverTooltipMixin):
 
     @pyqtSlot(object)
     def _on_search_complete(self, results):
-        """搜索完成回调 - 使用智能匹配结果，隐藏重复名称项目"""
+        """搜索完成回调 - 按原版逻辑展示全部匹配结果（不隐藏同名教材）"""
         self._show_loading(False)
-        seen_titles = set()
-        unique_results = []
-        for item in results:
-            title = item.get('title', '')
-            if title not in seen_titles:
-                seen_titles.add(title)
-                unique_results.append(item)
-        self.search_results = unique_results
-        self._filtered_results = unique_results
+        self.search_results = list(results)
+        self._filtered_results = list(results)
         self.current_page = 1
-        if not unique_results:
+        if not self.search_results:
             self._show_empty_state(True)
             self._update_pagination_controls()
             self.cover_widget.clear()
